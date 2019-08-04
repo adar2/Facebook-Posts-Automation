@@ -5,9 +5,13 @@ if you are planning of using this code or change it please add me as contributor
 
 Facebook-bot:
 This script has the following funcrionallity:
+
 1 Post Something.
+
 2 Groups Scraper.
-3 Reply to posts in groups
+
+3 Reply to posts in url(can be group or profile as well)
+
 4 Post to multiple pages
 
 1:used to post text and or media to some url
