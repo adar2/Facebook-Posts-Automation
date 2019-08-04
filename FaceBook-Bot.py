@@ -23,44 +23,53 @@ def post_to_url(driver, message, url='https://facebook.com/'):
     wait()
     post_btn = driver.find_element_by_xpath("//button[@data-testid='react-composer-post-button']")
     post_btn.click()
-    print("Successfully posted to the wall.. with the content:" + message)
+    print("Successfully posted to the wall.. with the content:" + message + '\n')
 
 
-def post_media_to_url(driver, path_to_media, url='https://facebook.com/', message=''):
+def post_media_to_url(driver, url='', path_to_media='', message=''):
     # by default posts to news feed if not given url argument
-    if url != 'https://facebook.com/':
+    if url != '':
         driver.get(url)
         wait()
-    photo_btn = driver.find_element_by_xpath("//div[@aria-label='Create a post']")
+    post_elem = driver.find_element_by_xpath("//div[contains(@aria-label,'a post') or contains(@aria-label,'on your mind')]")
     wait()
-    photo_btn.click()
+    post_elem.click()
+    wait()
     if message != '':
-        text_box = driver.find_element_by_xpath("//div[contains(@aria-label,'on your mind')]")
+        text_box = driver.find_element_by_xpath("//div[contains(@role,'box')]")
         text_box.send_keys(message)
     wait()
-    try:
-        post = driver.find_element_by_xpath("//*[@data-testid='photo-video-button']")  # should work in business page
-        post.click()
+    if path_to_media != '':
+        try:
+            post_btn = driver.find_element_by_xpath(
+                "//*[@data-testid='photo-video-button']")  # should work in business page
+            post_btn.click()
+            wait()
+        except Exception as e:
+            post_btn = driver.find_element_by_xpath("//input[@name='composer_photo[]']")  # should work in news feed
+        else:
+            post_btn = driver.find_element_by_xpath("//input[@name='composer_photo']")
+
         wait()
-    except Exception as e:
-        post = driver.find_element_by_xpath("//input[@name='composer_photo[]']")  # should work in news feed
-        # print(e)
-        pass
+        post_btn.send_keys(path_to_media)
+    if message != '' or path_to_media != '':
+        post_btn = driver.find_element_by_xpath("//button[@data-testid='react-composer-post-button']")
+        post_btn.click()  # click on share button to share media
+        print(
+            "Successfully posted to url:" + url + " with the media:" + path_to_media + "with the message:" + message + "\n")
     else:
-        post = driver.find_element_by_xpath("//input[@name='composer_photo']")
-
-    wait()
-    post.send_keys(path_to_media)
-    post_btn = driver.find_element_by_xpath("//button[@data-testid='react-composer-post-button']")
-    post_btn.click()  # click on share button to share media
-    print("Successfully posted to url:" + url + " with the media:" + path_to_media)
+        print("Nothing to post\n")
 
 
-def post_to_groups(driver, data, groups):
-    for group in groups:
-        post_to_url(driver, data, group)
-        print("Successful posting to:" + group + " with the content:" + data)
-        wait()
+def post_to_groups(driver, groups, message='', path_to_media=''):
+    if '.txt' not in groups:
+        print("didnt get a txt file of groups")
+        return
+    with open(groups, 'r+') as data_file:
+        data = data_file.readlines()
+        data_file.close()
+    for group in data:
+        post_media_to_url(driver, path_to_media, group, message)
 
 
 def group_post_responder(driver, url, query, reply_content, days_delta):
@@ -155,7 +164,7 @@ def do_login(driver, usr, passwd):
     wait()
     submit_btn = driver.find_element_by_id('loginbutton')
     submit_btn.click()
-    print("Successful Login")
+    print("Successful Login\n")
 
 
 def init_driver():
@@ -166,43 +175,49 @@ def init_driver():
 
 
 def menu(driver):
-    print("Please enter your facebook credentials:")
-    username = input("Enter email or phone number:")
-    password = input("Enter password:")
+    print("Please enter your facebook credentials:\n")
+    username = input("Enter email or phone number:\n")
+    password = input("Enter password:\n")
     do_login(driver, username, password)
-    menu = {'1': "Post Something.", '2': "Groups Scraper.", '3': "Reply to posts in groups", '4': "Exit"}
+    menu_dict = {'1': "Post Something.", '2': "Groups Scraper.", '3': "Reply to posts in groups",
+                 '4': "Post to multiple pages", '5': "Exit"}
     while True:
-        options = sorted(menu.keys())
+        options = sorted(menu_dict.keys())
         for entry in options:
-            print(entry, menu[entry])
-        selection = input("Please Select:")
+            print(entry, menu_dict[entry])
+        selection = input("Please Select:\n")
 
         if selection == '1':
-            while True:
-                sub_menu = {'1': "Post Text", '2': "Post media + text(optional)", '3': "Back"}
-                sub_options = sorted(sub_menu.keys())
-                for entry in sub_options:
-                    print(entry, sub_menu[entry])
-                selection = input("Please Select:")
-                if selection == '1':
-                    url = input("Enter url you would like to post to (by default posts to news feed):")
-                    message = input("Enter the content of the post")
-                    post_to_url(driver, message, url)
-                if selection == '2':
-                    url = input("Enter url you would like to post to (by default posts to news feed):")
-                    message = input("Enter the content of the post (optional you may leave it blank)")
-                    path_to_media = input("Enter full path to the desired photo/video")
-                    post_media_to_url(driver, url, path_to_media, message)
-                elif selection == '3':
-                    break
+            print("Post something")
+            url = input("Enter url you would like to post to (by default posts to news feed):\n")
+            message = input("Enter the content of the post (optional you may leave it blank):\n")
+            path_to_media = input("Enter full path to the desired photo/video:\n")
+            post_media_to_url(driver, url, path_to_media, message)
+
         elif selection == '2':
-            print("GROUPS SCRAPER")
+            print("Group members extractor")
+            url = input("Enter url you would like to post to:\n")
+            while url == '' or 'facebook.com' not in url:
+                print("Invalid value")
+                url = input("Enter url you would like to post to:\n")
+            group_members_extractor(driver, url)
 
         elif selection == '3':
             print("REPLY TO POSTS IN GROUPS BY QUERY")
+            url = input("Enter url you would like to reply to his posts:\n")
+            query = input("Enter query you want search for in url posts:\n")
+            reply_content = input("Enter the reply you want to leave to posts containing your query:\n")
+            days_delta = input("Enter time delta in days for posts that are relevant for reply:\n")
+            group_post_responder(driver, url, query, reply_content, days_delta)
 
         elif selection == '4':
-            print("EXITING...")
+            print("Post to multiple pages")
+            groups = input("Enter path to txt file containing your group list, one group per line:\n")
+            message = input("Enter message you would like to leave in this pages:(optional)\n")
+            path_to_media = input("Enter path to the media you would like to post in this pages:(optional)\n")
+            post_to_groups(driver, groups, message, path_to_media)
+        elif selection == '5':
+            print("Exiting...")
             driver.close()
             break
         else:
@@ -212,16 +227,8 @@ def menu(driver):
 def main():
     try:
         driver = init_driver()
-        # usr = 'warmundadar@gmail.com'
-        # passwd = 'Strong$h!t30'
-        # do_login(driver, usr, passwd)
-        # post_media_to_url(driver, '/home/r00t/PycharmProjects/untitled/test.jpg')
-        # post_to_url(driver, 'True Colors Animation Simply The Best')
-        # post_to_groups(driver, data, groups, delay)
-        # group_members_extractor(driver, 'https://www.facebook.com/groups/377363775634155/')
-        # group_post_responder(driver, 'https://www.facebook.com/groups/810769362294321/', 'אפשר')
-        # driver.close()
         menu(driver)
+
     except Exception as e:
         driver.close()
         print(e)
