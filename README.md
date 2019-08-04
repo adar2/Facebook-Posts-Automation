@@ -8,7 +8,7 @@ This script has the following funcrionallity:
 
 1 Post Something. :used to post text and or media to some url
 
-2 Groups Scraper. :used to extract list of name and facebook profile links of members of a group
+2 Groups Scraper. :used to extract list of name and facebook profile links of members of a group and write's that data into *-members.txt
 
 3 Reply to posts in url(can be group or profile as well). :used to replay to posts containing the query with a message you want.(can reply to posts with specifc time delta)
 
