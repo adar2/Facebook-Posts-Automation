@@ -6,20 +6,14 @@ if you are planning of using this code or change it please add me as contributor
 Facebook-bot:
 This script has the following funcrionallity:
 
-1 Post Something.
+1 Post Something. :used to post text and or media to some url
 
-2 Groups Scraper.
+2 Groups Scraper. :used to extract list of name and facebook profile links of members of a group
 
-3 Reply to posts in url(can be group or profile as well)
+3 Reply to posts in url(can be group or profile as well). :used to replay to posts containing the query with a message you want.(can reply to posts with specifc time delta)
 
-4 Post to multiple pages
+4 Post to multiple pages. :same as the first option  but in gets txt file containing links to places to post
 
-1:used to post text and or media to some url
-
-2:used to extract list of name and facebook profile links of members of a group
-
-3:used to replay to posts containing the query with a message you want.
-based on date delta.
 
 Inorder to run this script simply install selenium using pip:
 pip install selenium
