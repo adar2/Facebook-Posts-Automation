@@ -2,7 +2,7 @@
 created by: adar2 
 if you are planning on using this code or change it, please add me as a contributor.
 
-Facebook-but:
+Facebook-bot:
 
 This script has the following functionality:
 
