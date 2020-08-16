@@ -1,47 +1,86 @@
 # Facebook-Bot
-created by: adar2 
-if you are planning on using this code or modify it, please add me as a contributor.
 
-Facebook-bot:
+Making publishing posts on Facebook easier and faster by using a bot posting to many pages very fast,
+getting a list of group members out of Facebook group and even scheduling posts to different dates and
+hours. The bot was built using pure python with selenium as the client, SQLite3 for database and PyQt5
+for GUI.
 
-![image](https://i.ibb.co/C2mmC65/Screenshot-at-2020-04-26-18-14-13.png)
 
-This script was made with python selenium and pyqt5 for making the task of posting to FB easier.
+![image](https://i.ibb.co/FDb8SgM/Screenshot-at-2020-08-13-18-08-03.png)
 
-in order to use this script you need to have selenium and pyqt5,you can do so by using pip.
 
-`pip install selenium pyqt5`
+
+# Dependencies
+selenium
+
+pyqt5
+
+pysqlite3
+
+# Installation
+
+`pip install selenium pyqt5 pysqlite3`
+
 or
-`pip install -r requirements`
 
-you also need to have mozilla geckodriver you can get it here ![geckodriver](https://github.com/mozilla/geckodriver).
+`pip install -r requirements.txt`
 
-make sure you have gecko binary in path or you might want to specify the path in Bot.py.
+You also need to have mozilla geckodriver you can get it here ![geckodriver](https://github.com/mozilla/geckodriver).
 
-if you wish to use other browser then firefox , i.e Chrome make sure to do the right adjustments
-in the driver configuration in Bot.py file.
+If you wish to use some other browser binary supported by selenium (i.e. Chrome), you need to edit 'Bot.py'.
 
-after you've got all of it ready, you can use the gui by running `python FB-GUI.py` or you can use directy the bot if you'd like.
+replace :
 
-you should first enter username and password and click the login button.
-you only need to log in once.
+`self.driver = webdriver.Firefox(options=self.options)` 
 
-once you logged in you can use the text fileds in the gui for posting some message and/or image to some url.
-user wall is deafault in case no url were given.
-you can choose an image to attach to your post by clicking the image file button.
-when you're ready to post simply click the post button and let the bot do its job.
+with something like :
 
-you can also scrape group members from facebook groups by entering the group url and hitting the scrape url button.
-the output data contains names and profiles links.
+`self.driver = webdriver.Chrome(options=self.options)`
 
-if you wish to post to mulitple pages/groups you can specify a text files containg the information in the following order:
+Make sure you have geckodriver binary (or any other browser) in project directory or you might want to specify the path in Bot.py.
 
-fb-url/group1,message1,image_path1
+E.g. `self.driver = webdriver.Firefox(executable_path="/data/Drivers/geckodriver",options=self.options)`
 
-fb-url/group2,message2,image_path2
+# Usage
 
-fb-url/group3,message3,image_path3
+When you've got all of it ready, you can start the gui by execute `python main.py` in command line.
 
-and click on the multi post button.
+You need first to create a user by clicking the add user button, a dialog window will open, enter username and password and click ok.
+
+Once you've got your user created you can continue and add posts,targets and scheduled tasks all of those will be stored in the database for the user who created them and will remain there until you delete them.
 
 
+__Login:__
+
+Select the user from the existing users dropdown, and click the login button.
+You can choose to run the browser driver headless or not by checking the `hide browser` checkbox.
+
+__Post:__
+
+First you need to create post by clicking the add post button, insert the post content and select the media file using the dialog browse button.
+both field are optional but at least one of them must be non empty in order to create new post.
+
+Add target by clicking the add target button and entering facebook url you wish to post to.
+
+Now go ahead and select one post from the posts list, you can select one or more targets from the targets list by using `Ctrl` or `Shift` and click the post button.
+
+__Scrape:__
+
+Add a group target i.e `facebook.com/group/123456`, using the add target button.
+
+Select the group target you've added and click the scrape button.
+
+List with group users and their facebook profile link will show in the log text. 
+
+__Tasks:__
+
+Tasks are comprised of post, one or more targets,date and task name.
+
+Each task is associated with the user created that task, means that the task will execute as that user, you can schedule multiple tasks for multiple users at the same time.
+
+The tasks executor runs on separate thread so you can select the tasks you want to schedule to run and continue to use the script.
+
+You can run tasks by selecting one or more tasks from the tasks list and click the run task button. 
+
+
+if you find this script useful and want to donate , Bitcoin: 3Lp9nPK52o9Rn3emFLiqofLvbnL7GoDZvo
