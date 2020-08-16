@@ -6,10 +6,10 @@ import os
 class DatabaseEncrypt(object):
     def __init__(self):
         try:
-            keyring.get_password('fbdb', os.getlogin())
+            keyring.get_password('fbdb', os.environ.get('USER'))
         except FileNotFoundError:
-            keyring.set_password('fbdb', os.getlogin(), Fernet.generate_key())
-        self.f = Fernet(keyring.get_password('fbdb', os.getlogin()))
+            keyring.set_password('fbdb', os.environ.get('USER'), Fernet.generate_key())
+        self.f = Fernet(keyring.get_password('fbdb', os.environ.get('USER')))
 
     def encrypt(self, password):
         return self.f.encrypt(bytes(password.encode()))
