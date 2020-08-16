@@ -11,11 +11,15 @@ for GUI.
 
 
 # Dependencies
-selenium
+selenium~=3.141.0
 
-pyqt5
+pyqt5~=5.14.2
 
 pysqlite3
+
+keyring~=10.6.0
+
+cryptography~=2.8
 
 # Installation
 
@@ -37,7 +41,7 @@ with something like :
 
 `self.driver = webdriver.Chrome(options=self.options)`
 
-Make sure you have geckodriver binary (or any other browser) in project directory or you might want to specify the path in Bot.py.
+Make sure you have geckodriver binary (or any other browser) in project directory or you might want to specify the path in `Bot.py`.
 
 E.g. `self.driver = webdriver.Firefox(executable_path="/data/Drivers/geckodriver",options=self.options)`
 
