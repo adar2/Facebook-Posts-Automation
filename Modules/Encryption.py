@@ -12,8 +12,8 @@ class DatabaseEncrypt(object):
         else:
             user = os.environ.get('USER')
         if keyring.get_password('fbdb', user) is None:
-            keyring.set_password('fbdb', user, Fernet.generate_key())
-        self.f = Fernet(keyring.get_password('fbdb', user))
+            keyring.set_password('fbdb', user, Fernet.generate_key().decode())
+        self.f = Fernet(keyring.get_password('fbdb', user).encode())
 
     def encrypt(self, password):
         return self.f.encrypt(bytes(password.encode()))
