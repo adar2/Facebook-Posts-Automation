@@ -469,11 +469,12 @@ class Ui_MainWindow(object):
 
     def add_task(self):
         def accepted():
-            task_name, post_id, targets, date = self.task_dialog_data(dialog,user_id)
-            if self.db_wrap.add_task(task_name, user_id, post_id, targets, date) == 'SUCCESS':
-                self.output_textedit.insertPlainText(f"[{now_str()}] Task was added successfully.\n")
-            else:
-                self.output_textedit.insertPlainText(f"[{now_str()}] Failed to add new task.\n")
+            if self.task_dialog_data(dialog,user_id) is not None:
+                task_name, post_id, targets, date = self.task_dialog_data(dialog,user_id)
+                if self.db_wrap.add_task(task_name, user_id, post_id, targets, date) == 'SUCCESS':
+                    self.output_textedit.insertPlainText(f"[{now_str()}] Task was added successfully.\n")
+                else:
+                    self.output_textedit.insertPlainText(f"[{now_str()}] Failed to add new task.\n")
 
         def rejected():
             self.output_textedit.insertPlainText(f"[{now_str()}] Task addition was canceled.\n")
@@ -502,7 +503,7 @@ class Ui_MainWindow(object):
         task_name = dialog.ui.task_name_line_edit.text()
         if len(targets) == 0 or post is None or task_name == '':
             self.output_textedit.insertPlainText(f"[{now_str()}] Task editing was canceled.\n")
-            return
+            return None
         msg, media = (post.text().split(' | ')[0], post.text().split(' | ')[1])
         if media == 'None':
             media = None
@@ -511,10 +512,11 @@ class Ui_MainWindow(object):
 
     def edit_task(self):
         def accepted():
-            task_name, post_id, targets, date = self.task_dialog_data(dialog,user_id)
-            if self.db_wrap.edit_task(task.text(), user_id, task_name, post_id, targets, date) == 'SUCCESS':
-                self.output_textedit.insertPlainText(f"[{now_str()}] Task was edited successfully.\n")
-                self.get_user_data()
+            if self.task_dialog_data(dialog,user_id) is not None:
+                task_name, post_id, targets, date = self.task_dialog_data(dialog,user_id)
+                if self.db_wrap.edit_task(task.text(), user_id, task_name, post_id, targets, date) == 'SUCCESS':
+                    self.output_textedit.insertPlainText(f"[{now_str()}] Task was edited successfully.\n")
+                    self.get_user_data()
             else:
                 self.output_textedit.insertPlainText(f"[{now_str()}] Failed to edit  task.\n")
 

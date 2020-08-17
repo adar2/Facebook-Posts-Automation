@@ -66,8 +66,6 @@ class Bot:
         try:
             self.driver.get(url)
 
-            post_btn = self.driver.find_element_by_xpath('//input[@name="view_post"]')
-
             if message != '':
                 textbox = self.driver.find_element_by_xpath('//textarea[@name="xc_message"]')
                 textbox.send_keys(message)
@@ -84,6 +82,7 @@ class Bot:
                 upload_photo.click()
 
             if media_path != '' or message != '':
+                post_btn = self.driver.find_element_by_xpath('//input[@name="view_post"]')
                 post_btn.click()
                 return 'Posted to :' + url
         except NoSuchElementException and WebDriverException as e:
