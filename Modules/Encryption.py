@@ -1,3 +1,4 @@
+import platform
 import keyring
 from cryptography.fernet import Fernet
 import os
@@ -5,9 +6,14 @@ import os
 
 class DatabaseEncrypt(object):
     def __init__(self):
-        if keyring.get_password('fbdb', os.environ.get('USER')) is None:
-            keyring.set_password('fbdb', os.environ.get('USER'), Fernet.generate_key())
-        self.f = Fernet(keyring.get_password('fbdb', os.environ.get('USER')))
+        current_os = platform.system()
+        if current_os == 'Windows':
+            user = os.environ.get('USERNAME')
+        else:
+            user = os.environ.get('USER')
+        if keyring.get_password('fbdb', user) is None:
+            keyring.set_password('fbdb', user, Fernet.generate_key())
+        self.f = Fernet(keyring.get_password('fbdb', user))
 
     def encrypt(self, password):
         return self.f.encrypt(bytes(password.encode()))
