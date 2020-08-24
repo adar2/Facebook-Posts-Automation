@@ -86,6 +86,8 @@ class TaskExecuteThread(QThread):
                     task.set_status('completed')
                     self.task_completed_signal.emit(task.get_task_name())
                     self.bot.logout()
+                else:
+                    print(f'Task executor failed to login to account with email: {task.get_user_name()}')
             if 15 > self.waiting_time > 0:
                 self.sleep(int(self.waiting_time))
             else:

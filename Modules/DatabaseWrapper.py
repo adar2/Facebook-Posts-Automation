@@ -1,6 +1,7 @@
 import logging
 import sqlite3
 from Modules.Encryption import DatabaseEncrypt
+
 logging.basicConfig(format=' %(asctime)s - %(message)s', level=logging.WARNING)
 
 
@@ -29,7 +30,8 @@ class DatabaseWrapper(object):
         if user is not None:
             logging.info("User already exists, aborting..")
             return 'ERROR'
-        self.cursor.execute('insert into users (USER_NAME,PASSWORD) values (?,?);', (username,self.db_encrypt.encrypt(password)))
+        self.cursor.execute('insert into users (USER_NAME,PASSWORD) values (?,?);',
+                            (username, self.db_encrypt.encrypt(password)))
         self.db_conn.commit()
         return 'SUCCESS'
 
@@ -39,7 +41,7 @@ class DatabaseWrapper(object):
             logging.info("Can't find the requested user, aborting..")
             return 'ERROR'
         self.cursor.execute("update users set USER_NAME=?,PASSWORD=? where ID is ?;",
-                            (new_username, new_password, user[0]))
+                            (new_username, self.db_encrypt.encrypt(new_password), user[0]))
         self.db_conn.commit()
         return 'SUCCESS'
 
@@ -56,9 +58,11 @@ class DatabaseWrapper(object):
         return 'SUCCESS'
 
     def get_user(self, username, password):
-        self.cursor.execute('select * from users where USER_NAME is ? and PASSWORD is ?;', (username, password))
-        user = self.cursor.fetchone()
-        return user
+        users = self.get_users()
+        for user in users:
+            if user[1] == username and self.db_encrypt.decrypt(user[2]) == password:
+                return user
+        return None
 
     def get_user_by_id(self, user_id):
         self.cursor.execute('select * from users where ID is ?;', (user_id,))
