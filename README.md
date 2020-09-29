@@ -86,5 +86,3 @@ The tasks executor runs on separate thread so you can select the tasks you want 
 
 You can run tasks by selecting one or more tasks from the tasks list and click the run task button. 
 
-
-if you find this script useful and want to donate , Bitcoin: 3Lp9nPK52o9Rn3emFLiqofLvbnL7GoDZvo
