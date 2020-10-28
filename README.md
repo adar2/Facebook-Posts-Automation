@@ -1,4 +1,4 @@
-# Facebook-Bot
+# Facebook-Posts-Automation
 
 Making publishing posts on Facebook easier and faster by using a bot posting to many pages very fast,
 getting a list of group members out of Facebook group and even scheduling posts to different dates and
