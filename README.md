@@ -19,7 +19,7 @@ pysqlite3
 
 keyring~=10.6.0
 
-cryptography~=2.8
+cryptography>=3.2
 
 # Installation
 
