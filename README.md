@@ -6,9 +6,7 @@ hours. The bot was built using pure python with selenium as the client, SQLite3 
 for GUI.
 
 
-![image](https://i.ibb.co/FDb8SgM/Screenshot-at-2020-08-13-18-08-03.png)
-
-
+![img](https://i.ibb.co/ysYqVdj/mainwindowfb.png)
 
 # Dependencies
 selenium~=3.141.0
@@ -23,7 +21,7 @@ cryptography>=3.2
 
 # Installation
 
-`pip install selenium pyqt5 pysqlite3`
+`pip install selenium pyqt5 pysqlite3 cryptography keyring`
 
 or
 
@@ -51,6 +49,9 @@ When you've got all of it ready, you can start the gui by execute `python main.p
 
 You need first to create a user by clicking the add user button, a dialog window will open, enter username and password and click ok.
 
+![img](https://i.ibb.co/bd1L6dD/adduser.png)
+
+
 Once you've got your user created you can continue and add posts,targets and scheduled tasks all of those will be stored in the database for the user who created them and will remain there until you delete them.
 
 
@@ -64,7 +65,11 @@ __Post:__
 First you need to create post by clicking the add post button, insert the post content and select the media file using the dialog browse button.
 both field are optional but at least one of them must be non empty in order to create new post.
 
+![img](https://i.ibb.co/zVk5n97/addpost.png)
+
 Add target by clicking the add target button and entering facebook url you wish to post to.
+
+![img](https://i.ibb.co/mFFSF8L/addtarget.png)
 
 Now go ahead and select one post from the posts list, you can select one or more targets from the targets list by using `Ctrl` or `Shift` and click the post button.
 
@@ -80,9 +85,19 @@ __Tasks:__
 
 Tasks are comprised of post, one or more targets,date and task name.
 
+![img](https://i.ibb.co/xF715Zs/addtask.png)
+
 Each task is associated with the user created that task, means that the task will execute as that user, you can schedule multiple tasks for multiple users at the same time.
 
 The tasks executor runs on separate thread so you can select the tasks you want to schedule to run and continue to use the script.
 
 You can run tasks by selecting one or more tasks from the tasks list and click the run task button. 
 
+__Load File:__
+
+You can load a json file containing your posts and targets.
+
+the structure for the json file should be as follow:
+
+`{"posts":[{"msg":"some_post","media":"path_to_meida"},...],
+    "targets":[{"target":"facebook.com/some_page},.....]}`

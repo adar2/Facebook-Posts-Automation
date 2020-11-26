@@ -136,6 +136,9 @@ class Ui_MainWindow(object):
         self.headless_checkBox = QtWidgets.QCheckBox(self.centralwidget)
         self.headless_checkBox.setObjectName("headless_checkBox")
         self.horizontalLayout_3.addWidget(self.headless_checkBox)
+        self.load_file_btn = QtWidgets.QPushButton(self.centralwidget)
+        self.load_file_btn.setObjectName("load_file_btn")
+        self.horizontalLayout_3.addWidget(self.load_file_btn)
         self.login_btn = QtWidgets.QPushButton(self.centralwidget)
         self.login_btn.setObjectName("login_btn")
         self.horizontalLayout_3.addWidget(self.login_btn)
@@ -204,6 +207,7 @@ class Ui_MainWindow(object):
         self.task_execute.task_timeout_signal.connect(self.task_timeout)
         self.task_execute.task_completed_signal.connect(self.task_completed)
         self.task_execute.started_signal.connect(self.task_execute_started)
+        self.load_file_btn.clicked.connect(self.load_data_from_file)
 
     def retranslateUi(self, MainWindow):
         _translate = QtCore.QCoreApplication.translate
@@ -225,6 +229,7 @@ class Ui_MainWindow(object):
         self.delete_task_btn.setText(_translate("MainWindow", "Delete Task"))
         self.add_task_btn.setText(_translate("MainWindow", "Add Task"))
         self.headless_checkBox.setText(_translate("MainWindow", "Hide Browser"))
+        self.load_file_btn.setText(_translate("MainWindow", "Load File"))
         self.login_btn.setText(_translate("MainWindow", "Login"))
         self.logout_btn.setText(_translate("MainWindow", "Logout"))
         self.post_btn.setText(_translate("MainWindow", "Post"))
@@ -469,8 +474,8 @@ class Ui_MainWindow(object):
 
     def add_task(self):
         def accepted():
-            if self.task_dialog_data(dialog,user_id) is not None:
-                task_name, post_id, targets, date = self.task_dialog_data(dialog,user_id)
+            if self.task_dialog_data(dialog, user_id) is not None:
+                task_name, post_id, targets, date = self.task_dialog_data(dialog, user_id)
                 if self.db_wrap.add_task(task_name, user_id, post_id, targets, date) == 'SUCCESS':
                     self.output_textedit.insertPlainText(f"[{now_str()}] Task was added successfully.\n")
                 else:
@@ -512,8 +517,8 @@ class Ui_MainWindow(object):
 
     def edit_task(self):
         def accepted():
-            if self.task_dialog_data(dialog,user_id) is not None:
-                task_name, post_id, targets, date = self.task_dialog_data(dialog,user_id)
+            if self.task_dialog_data(dialog, user_id) is not None:
+                task_name, post_id, targets, date = self.task_dialog_data(dialog, user_id)
                 if self.db_wrap.edit_task(task.text(), user_id, task_name, post_id, targets, date) == 'SUCCESS':
                     self.output_textedit.insertPlainText(f"[{now_str()}] Task was edited successfully.\n")
                     self.get_user_data()
@@ -671,3 +676,14 @@ class Ui_MainWindow(object):
             for target in targets:
                 self.output_textedit.insertPlainText(
                     f'[{now_str()}] {self.bot.postToUrl(url=target.text(), media_path=media, message=msg)}.\n')
+
+    def load_data_from_file(self):
+        options = QFileDialog.Options()
+        options |= QFileDialog.DontUseNativeDialog
+        fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", "","JSON File (.json)", options=options)
+        if fileName:
+            if self.db_wrap.load_data(file_path=fileName, owner_id=self.get_current_user_id()) == 'SUCCESS':
+                self.output_textedit.insertPlainText(f'[{now_str()}] Successfully loaded the file.\n')
+            else:
+                self.output_textedit.insertPlainText(f'[{now_str()}] Something went wrong while trying to load the file.\n')
+            self.get_user_data()

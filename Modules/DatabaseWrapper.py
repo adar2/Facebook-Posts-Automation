@@ -1,5 +1,7 @@
+import json
 import logging
 import sqlite3
+
 from Modules.Encryption import DatabaseEncrypt
 
 logging.basicConfig(format=' %(asctime)s - %(message)s', level=logging.WARNING)
@@ -207,3 +209,20 @@ class DatabaseWrapper(object):
         self.cursor.execute('select * from tasks where TASK_NAME is ? and OWNER_ID is ?;', (task_name, owner_id))
         task = self.cursor.fetchone()
         return task
+
+    def load_data(self, file_path: str, owner_id):
+        with open(file_path, 'rb') as f:
+            json_file = json.loads(f.read())
+        try:
+            posts = json_file['posts']
+            targets = json_file['targets']
+            for post in posts:
+                msg = post['msg']
+                media = post['media'] if post['media'] != '' else None
+                self.add_post(msg, media, owner_id)
+            for target in targets:
+                self.add_target(target['target'], owner_id)
+            return 'SUCCESS'
+        except KeyError as e:
+            print('unknown format', e)
+            return 'ERROR'
