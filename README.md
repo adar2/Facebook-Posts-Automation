@@ -95,9 +95,20 @@ You can run tasks by selecting one or more tasks from the tasks list and click t
 
 __Load File:__
 
-You can load a json file containing your posts and targets.
+You can load a json like file containing your posts and targets.
 
 the structure for the json file should be as follow:
 
-`{"posts":[{"msg":"some_post","media":"path_to_meida"},...],
-    "targets":[{"target":"facebook.com/some_page},.....]}`
+```
+{
+    "posts":[
+                {"msg":"sometext1" ,"media":""},
+                {"msg":"sometext2", "media":"C:\\some_media_path"}
+            ],
+    "targets":[
+                {"target": "https://www.facebook.com/groups/189076xxxx"},
+                {"target": "https://www.facebook.com/groups/189076xxxx"}
+              ]
+}
+
+```
