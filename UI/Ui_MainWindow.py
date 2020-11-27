@@ -615,7 +615,7 @@ class Ui_MainWindow(object):
     def openImageDialog(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", "",
+        fileName, _ = QFileDialog.getOpenFileName(self, "Choose media file", "",
                                                   "Mobile Video(*.3g2);;Mobile Video(*.3gp);;Mobile Video(*.3gpp);;Windows Media Video(*.asf);;AVI(*.avi);;MPEG Video(*.dat);;DIVX Video(*.divx);;DV Video(*.dv);;Flash Video(*.f4v);;Flash Video(*.flv);;Graphics Interchange Format(*.gif);;M2TS Video(*.m2ts);;MPEG-4 Video(*.m4v);;Matroska Format(*.mkv);;MOD Video(*.mod);;QuickTime Movie(*.mov);;MPEG-4 Video(*.mp4);;MPEG Video(*.mpe);;MPEG Video(*.mpeg);;MPEG-4 Video(*.mpeg4);;MPEG Video(*.mpg);;AVCHD Video(*.mts);;Nullsoft Video(*.nsv);;Ogg Media Format(*.ogm);;Ogg Video Format(*.ogv);;QuickTime Movie(*.qt);;TOD Video(*.tod);;MPEG Transport Stream(*.ts);;DVD Video(*.vob);;Windows Media Video(*.wmv);;BMP(*.bmp);;DIB(*.dib);;HEIC(*.heic);;HEIF(*.heif);;IFF(*.iff);;JFIF(*.jfif);;JP2(*.jp2);;JPE(*.jpe);;JPEG(*.jpeg);;JPG(*.jpg);;PNG(*.png);;PSD(*.psd);;TIF(*.tif);;TIFF(*.tiff);;WBMP(*.wbmp);;WEBP(*.webp);;XBM(*.xbm)",
                                                   options=options)
         if fileName:
@@ -680,10 +680,11 @@ class Ui_MainWindow(object):
     def load_data_from_file(self):
         options = QFileDialog.Options()
         options |= QFileDialog.DontUseNativeDialog
-        fileName, _ = QFileDialog.getOpenFileName(self, "QFileDialog.getOpenFileName()", "","JSON File (.json)", options=options)
+        fileName, _ = QFileDialog.getOpenFileName(self, "Choose a file", options=options)
         if fileName:
             if self.db_wrap.load_data(file_path=fileName, owner_id=self.get_current_user_id()) == 'SUCCESS':
                 self.output_textedit.insertPlainText(f'[{now_str()}] Successfully loaded the file.\n')
             else:
-                self.output_textedit.insertPlainText(f'[{now_str()}] Something went wrong while trying to load the file.\n')
+                self.output_textedit.insertPlainText(
+                    f'[{now_str()}] Something went wrong while trying to load the file.\n')
             self.get_user_data()
